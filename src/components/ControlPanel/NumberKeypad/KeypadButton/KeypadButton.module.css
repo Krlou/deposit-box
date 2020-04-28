@@ -10,9 +10,22 @@
   font-size: 48px;
   text-align: center;
   outline: none;
+  /*added*/
+  position: relative;
 }
 
 .keypadButton:active {
   transform: scale(0.6);
   transition: transform 0.5s ease-in;
+}
+
+.symbol {
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 70%;
+  left: 80%;
+  color: #222222;
 }
