@@ -19,6 +19,7 @@
   font-size: 12px;
   color: #434343;
   font-weight: 500;
+  user-select: none;
 }
 
 @media (max-width: 1050px) {

@@ -1,5 +1,5 @@
 .backlitScreen {
-  background-color: #7fffff;
+  background-color: #47b2b2;
   width: 80%;
   height: 25%;
   border: 1px solid #606063;
@@ -7,19 +7,27 @@
   margin: 16px;
   position: relative;
   color: #434343;
+  overflow: hidden;
+}
+
+.off {
+  background-color: #7fffff;
 }
 
 .lockStatus {
   margin: 8px;
   font-size: 16px;
   font-weight: 400;
+  user-select: none;
 }
 
 .statusMessage {
-  margin: 8px 16px;
-  font-size: 40px;
+  margin: 8px 8px;
+  padding: 0 8px;
+  font-size: 32px;
   font-weight: 500;
   position: absolute;
   bottom: 0;
   right: 0;
+  user-select: none;
 }
