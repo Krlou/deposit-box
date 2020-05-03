@@ -11,6 +11,7 @@ const initialState = {
   timerCheckPasscode: null,
   enteringPasscode: false,
   beforeError: "",
+  disableButtons: false,
 };
 
 const reducer = (state = initialState, action) => {
@@ -117,6 +118,16 @@ const reducer = (state = initialState, action) => {
         screenIsOff: true,
         enteringPasscode: false,
         beforeError: "",
+      };
+    case actionTypes.DISABLE_BUTTONS:
+      return {
+        ...state,
+        disableButtons: true,
+      };
+    case actionTypes.ENABLE_BUTTONS:
+      return {
+        ...state,
+        disableButtons: false,
       };
     default:
       return {

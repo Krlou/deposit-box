@@ -26,3 +26,6 @@ export const SERVICE = "SERVICE";
 export const VALIDATING = "VALIDATING";
 
 export const RESET = "RESET";
+
+export const DISABLE_BUTTONS = "DISABLE_BUTTONS";
+export const ENABLE_BUTTONS = "ENABLE_BUTTONS";

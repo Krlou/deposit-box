@@ -91,12 +91,16 @@ class NumberKeypad extends Component {
     this.props.onClearScreenOffTimer();
 
     this.props.onUpdateScreen();
+
+    this.props.onEnableButtons(); //enable buttons...
   };
 
   //callback func for checkPasscodeTimer's setInterval
   handleCheckPasscode = () => {
     clearInterval(this.props.timerCheckPasscode);
     this.props.onClearCheckPasscodeTimer();
+
+    this.props.onDisableButtons(); //disable buttons while processing...
 
     if (this.props.enteringPasscode) this.props.onEnteringPasscode(); //added
 
@@ -106,6 +110,10 @@ class NumberKeypad extends Component {
   //onclick event handler
   handleKeypadButtonClicked = (event, symbol) => {
     event.preventDefault();
+
+    if (this.props.statusMessage === "Service") this.props.onEnableButtons(); //enable buttons in service mode for master code input...
+
+    if (this.props.disableButtons) return;
 
     if (this.props.screenIsOff) {
       this.props.onUpdateScreen();
@@ -210,11 +218,14 @@ const mapStateToProps = (state) => {
     boxPasscode: state.boxPasscode,
     enteringPasscode: state.enteringPasscode,
     serialNumber: state.serialNumber,
+    disableButtons: state.disableButtons,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
+    onDisableButtons: () => dispatch({ type: actionTypes.DISABLE_BUTTONS }),
+    onEnableButtons: () => dispatch({ type: actionTypes.ENABLE_BUTTONS }),
     onReset: () => dispatch({ type: actionTypes.RESET }),
     onValidating: () => dispatch({ type: actionTypes.VALIDATING }),
     onService: () => dispatch({ type: actionTypes.SERVICE }),
