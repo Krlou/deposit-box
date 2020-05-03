@@ -7,25 +7,31 @@
   margin: 16px;
   position: relative;
   color: #434343;
-  overflow: hidden; }
+  overflow: hidden;
+}
 
 .off {
-  background-color: #7fffff; }
+  background-color: #7fffff;
+}
 
 .lockStatus {
   margin: 8px;
-  font-size: 16px;
-  font-weight: 400;
-  user-select: none; }
+  font: {
+    size: 16px;
+    weight: 400;
+  }
+  user-select: none;
+}
 
 .statusMessage {
   margin: 8px 8px;
   padding: 0 8px;
-  font-size: 32px;
-  font-weight: 500;
+  font: {
+    size: 32px;
+    weight: 500;
+  }
   position: absolute;
   bottom: 0;
   right: 0;
-  user-select: none; }
-
-/*# sourceMappingURL=BacklitScreen.module.css.map */
+  user-select: none;
+}

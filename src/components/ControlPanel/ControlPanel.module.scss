@@ -8,20 +8,26 @@
   margin-right: 32px;
   display: flex;
   flex-direction: column;
-  align-items: center; }
+  align-items: center;
+}
 
 .serial {
   width: 100%;
   text-align: right;
-  padding-right: 16px;
-  padding-bottom: 8px;
-  font-size: 12px;
-  font-weight: 500;
+  padding: {
+    right: 16px;
+    bottom: 8px;
+  }
+  font: {
+    size: 12px;
+    weight: 500;
+  }
   color: #434343;
-  user-select: none; }
+  user-select: none;
+}
 
 @media (max-width: 1050px) {
   .controlPanel {
-    margin: 0 8px; } }
-
-/*# sourceMappingURL=ControlPanel.module.css.map */
+    margin: 0 8px;
+  }
+}
