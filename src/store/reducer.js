@@ -78,7 +78,11 @@ const reducer = (state = initialState, action) => {
       };
     case actionTypes.CLEAR_SCREEN_OFF_TIMER:
       let updatedStatus = null;
-      if (state.beforeError === "Ready") updatedStatus = "Ready";
+      if (
+        state.beforeError === "Ready" ||
+        state.beforeError === "Validating..."
+      )
+        updatedStatus = "Ready";
       else updatedStatus = "";
       return {
         ...state,
