@@ -63,21 +63,9 @@ class NumberKeypad extends Component {
         } else {
           this.props.onError();
         }
-      });
-
-    fetch(
-      "https://9w4qucosgf.execute-api.eu-central-1.amazonaws.com/default/CR-JS_team_M02a?code=" +
-        "456987*L0123"
-    )
-      .then((response) => {
-        return response.json();
       })
-      .then((responseData) => {
-        if (responseData.sn === this.props.serialNumber) {
-          this.props.onReset();
-        } else {
-          this.props.onError();
-        }
+      .catch((error) => {
+        console.error("Something went wrong with fetch operation:", error);
       });
   };
 
