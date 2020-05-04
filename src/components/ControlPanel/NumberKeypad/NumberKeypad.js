@@ -7,10 +7,36 @@ import * as actionTypes from "../../../store/actions";
 import classes from "./NumberKeypad.module.css";
 
 class NumberKeypad extends Component {
+  keyboardKeys = [
+    "0",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "L",
+    "l",
+    "*",
+    "A",
+    "a",
+    "B",
+    "b",
+    "ArrowUp",
+    "ArrowDown",
+    "ArrowLeft",
+    "ArrowRight",
+  ];
   unlockedValidation = (passcode) => {
     let isValid = false;
     const length = passcode.length;
-    if (length === 7 && passcode[length - 1] === "L") {
+    if (
+      length === 7 &&
+      (passcode[length - 1] === "L" || passcode[length - 1] === "l")
+    ) {
       const digits = passcode.slice(0, length - 1);
       if (!isNaN(digits)) {
         isValid = true;
@@ -133,6 +159,58 @@ class NumberKeypad extends Component {
     this.props.onUpdatePasscode(updatedPasscode);
   };
 
+  handleKeyboardEvent(event) {
+    if (this.keyboardKeys.includes(event.key)) {
+      let symbol = event.key;
+
+      let updatedSymbol = null;
+      switch (symbol) {
+        case "l":
+          updatedSymbol = "L";
+          break;
+        case "a":
+        case "A":
+          updatedSymbol = "L";
+          break;
+        case "b":
+        case "B":
+          updatedSymbol = "*";
+          break;
+        case "ArrowUp":
+          updatedSymbol = "8";
+          break;
+        case "ArrowDown":
+          updatedSymbol = "2";
+          break;
+        case "ArrowLeft":
+          updatedSymbol = "4";
+          break;
+        case "ArrowRight":
+          updatedSymbol = "6";
+          break;
+        default:
+          updatedSymbol = symbol;
+      }
+      this.handleKeypadButtonClicked(event, updatedSymbol);
+    }
+  }
+
+  componentDidMount() {
+    document.addEventListener(
+      "keyup",
+      this.handleKeyboardEvent.bind(this),
+      false
+    );
+  }
+
+  componentWillUnmount() {
+    document.removeEventListener(
+      "keyup",
+      this.handleKeyboardEvent.bind(this),
+      false
+    );
+  }
+
   render() {
     return (
       <div className={classes.numberKeypad}>
@@ -182,6 +260,7 @@ class NumberKeypad extends Component {
         </KeypadButton>
         <KeypadButton
           clicked={(event) => this.handleKeypadButtonClicked(event, "3")}
+          keyup={this.handleKeyboardEvent}
         >
           3
         </KeypadButton>
