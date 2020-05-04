@@ -30,7 +30,32 @@ class NumberKeypad extends Component {
     "ArrowLeft",
     "ArrowRight",
   ];
+
+  keypadButtons = [
+    { button: "7", symbol: null },
+    { button: "8", symbol: "8593" },
+    { button: "9", symbol: null },
+    { button: "4", symbol: "8592" },
+    { button: "5", symbol: null },
+    { button: "6", symbol: "8594" },
+    { button: "1", symbol: null },
+    { button: "2", symbol: "8595" },
+    { button: "3", symbol: null },
+    { button: "*", symbol: "66" },
+    { button: "0", symbol: null },
+    { button: "L", symbol: "65" },
+  ];
+
   unlockedValidation = (passcode) => {
+    const {
+      boxPasscode,
+      onSetBoxPasscode,
+      onLocking,
+      onReady,
+      onChangeLockStatus,
+      onError,
+    } = this.props;
+
     let isValid = false;
     const length = passcode.length;
     if (
@@ -44,37 +69,53 @@ class NumberKeypad extends Component {
     }
     if (
       isValid &&
-      (this.props.boxPasscode === "" ||
-        this.props.boxPasscode === passcode.slice(0, 6))
+      (boxPasscode === "" || boxPasscode === passcode.slice(0, 6))
     ) {
-      this.props.onSetBoxPasscode();
+      onSetBoxPasscode();
 
-      this.props.onLocking();
+      onLocking();
       setTimeout(() => {
-        this.props.onReady();
-        this.props.onChangeLockStatus();
+        onReady();
+        onChangeLockStatus();
       }, 3000);
     } else {
-      this.props.onError();
+      onError();
     }
   };
 
   lockedValidation = (passcode) => {
-    if (passcode === this.props.boxPasscode) {
-      this.props.onUnlocking();
+    const {
+      boxPasscode,
+      onUnlocking,
+      onReady,
+      onChangeLockStatus,
+      onService,
+      onError,
+    } = this.props;
+
+    if (passcode === boxPasscode) {
+      onUnlocking();
       setTimeout(() => {
-        this.props.onReady();
-        this.props.onChangeLockStatus();
+        onReady();
+        onChangeLockStatus();
       }, 3000);
     } else if (passcode === "000000") {
-      this.props.onService();
+      onService();
     } else {
-      this.props.onError();
+      onError();
     }
   };
 
   serviceValidation = (passcode) => {
-    this.props.onValidating();
+    const {
+      onValidating,
+      serialNumber,
+      onUnlocking,
+      onReset,
+      onError,
+    } = this.props;
+
+    onValidating();
 
     fetch(
       "https://9w4qucosgf.execute-api.eu-central-1.amazonaws.com/default/CR-JS_team_M02a?code=" +
@@ -84,13 +125,13 @@ class NumberKeypad extends Component {
         return response.json();
       })
       .then((responseData) => {
-        if (responseData.sn === this.props.serialNumber) {
-          this.props.onUnlocking();
+        if (responseData.sn === serialNumber) {
+          onUnlocking();
           setTimeout(() => {
-            this.props.onReset();
+            onReset();
           }, 3000);
         } else {
-          this.props.onError();
+          onError();
         }
       })
       .catch((error) => {
@@ -99,14 +140,13 @@ class NumberKeypad extends Component {
   };
 
   validate = () => {
-    let passcode = this.props.passcode;
-    switch (this.props.lockStatus) {
+    const { passcode, lockStatus, statusMessage } = this.props;
+    switch (lockStatus) {
       case "Unlocked":
         this.unlockedValidation(passcode);
         break;
       case "Locked":
-        if (this.props.statusMessage === "Service")
-          this.serviceValidation(passcode);
+        if (statusMessage === "Service") this.serviceValidation(passcode);
         else this.lockedValidation(passcode);
         break;
       default:
@@ -114,52 +154,78 @@ class NumberKeypad extends Component {
     }
   };
 
-  //callback func for screenOffTimer's setInterval
   handleScreenOff = () => {
-    clearInterval(this.props.timerScreenOff);
-    this.props.onClearScreenOffTimer();
+    const {
+      timerScreenOff,
+      onClearScreenOffTimer,
+      onUpdateScreen,
+      onEnableButtons,
+    } = this.props;
 
-    this.props.onUpdateScreen();
+    clearInterval(timerScreenOff);
+    onClearScreenOffTimer();
 
-    this.props.onEnableButtons(); //enable buttons...
+    onUpdateScreen();
+
+    onEnableButtons();
   };
 
-  //callback func for checkPasscodeTimer's setInterval
   handleCheckPasscode = () => {
-    clearInterval(this.props.timerCheckPasscode);
-    this.props.onClearCheckPasscodeTimer();
+    const {
+      timerCheckPasscode,
+      onClearCheckPasscodeTimer,
+      onDisableButtons,
+      enteringPasscode,
+      onEnteringPasscode,
+    } = this.props;
 
-    this.props.onDisableButtons(); //disable buttons while processing...
+    clearInterval(timerCheckPasscode);
+    onClearCheckPasscodeTimer();
 
-    if (this.props.enteringPasscode) this.props.onEnteringPasscode(); //added
+    onDisableButtons();
+
+    if (enteringPasscode) onEnteringPasscode();
 
     this.validate();
   };
 
-  //onclick event handler
   handleKeypadButtonClicked = (event, symbol) => {
     event.preventDefault();
 
-    if (this.props.statusMessage === "Service") this.props.onEnableButtons(); //enable buttons in service mode for master code input...
+    const {
+      statusMessage,
+      onEnableButtons,
+      disableButtons,
+      screenIsOff,
+      onUpdateScreen,
+      onEnteringPasscode,
+      enteringPasscode,
+      timerScreenOff,
+      timerCheckPasscode,
+      onSetScreenOffTimer,
+      onSetCheckPasscodeTimer,
+      passcode,
+      onUpdatePasscode,
+    } = this.props;
 
-    if (this.props.disableButtons) return;
+    if (statusMessage === "Service") onEnableButtons();
 
-    if (this.props.screenIsOff) {
-      this.props.onUpdateScreen();
-      this.props.onEnteringPasscode(); //added
+    if (disableButtons) return;
+
+    if (screenIsOff) {
+      onUpdateScreen();
+      onEnteringPasscode();
     }
 
-    if (this.props.statusMessage === "Service" && !this.props.enteringPasscode)
-      this.props.onEnteringPasscode();
+    if (statusMessage === "Service" && !enteringPasscode) onEnteringPasscode();
 
-    clearInterval(this.props.timerScreenOff);
-    clearInterval(this.props.timerCheckPasscode);
-    this.props.onSetScreenOffTimer(this.handleScreenOff);
-    this.props.onSetCheckPasscodeTimer(this.handleCheckPasscode);
+    clearInterval(timerScreenOff);
+    clearInterval(timerCheckPasscode);
+    onSetScreenOffTimer(this.handleScreenOff);
+    onSetCheckPasscodeTimer(this.handleCheckPasscode);
 
-    let passcode = this.props.passcode;
     let updatedPasscode = passcode + symbol;
-    this.props.onUpdatePasscode(updatedPasscode);
+    onUpdatePasscode(updatedPasscode);
   };
 
   handleKeyboardEvent(event) {
@@ -215,77 +281,18 @@ class NumberKeypad extends Component {
   }
 
   render() {
-    return (
-      <div className={classes.numberKeypad}>
+    let buttons = this.keypadButtons.map((btn) => {
+      return (
         <KeypadButton
-          clicked={(event) => this.handleKeypadButtonClicked(event, "7")}
+          key={btn.button}
+          symbol={btn.symbol}
+          clicked={(event) => this.handleKeypadButtonClicked(event, btn.button)}
         >
-          7
+          {btn.button}
         </KeypadButton>
-        <KeypadButton
-          symbol="&uarr;"
-          clicked={(event) => this.handleKeypadButtonClicked(event, "8")}
-        >
-          8
-        </KeypadButton>
-        <KeypadButton
-          clicked={(event) => this.handleKeypadButtonClicked(event, "9")}
-        >
-          9
-        </KeypadButton>
-        <KeypadButton
-          symbol="&larr;"
-          clicked={(event) => this.handleKeypadButtonClicked(event, "4")}
-        >
-          4
-        </KeypadButton>
-        <KeypadButton
-          clicked={(event) => this.handleKeypadButtonClicked(event, "5")}
-        >
-          5
-        </KeypadButton>
-        <KeypadButton
-          symbol="&rarr;"
-          clicked={(event) => this.handleKeypadButtonClicked(event, "6")}
-        >
-          6
-        </KeypadButton>
-        <KeypadButton
-          clicked={(event) => this.handleKeypadButtonClicked(event, "1")}
-        >
-          1
-        </KeypadButton>
-        <KeypadButton
-          symbol="&darr;"
-          clicked={(event) => this.handleKeypadButtonClicked(event, "2")}
-        >
-          2
-        </KeypadButton>
-        <KeypadButton
-          clicked={(event) => this.handleKeypadButtonClicked(event, "3")}
-          keyup={this.handleKeyboardEvent}
-        >
-          3
-        </KeypadButton>
-        <KeypadButton
-          symbol="B"
-          clicked={(event) => this.handleKeypadButtonClicked(event, "*")}
-        >
-          *
-        </KeypadButton>
-        <KeypadButton
-          clicked={(event) => this.handleKeypadButtonClicked(event, "0")}
-        >
-          0
-        </KeypadButton>
-        <KeypadButton
-          symbol="A"
-          clicked={(event) => this.handleKeypadButtonClicked(event, "L")}
-        >
-          L
-        </KeypadButton>
-      </div>
-    );
+      );
+    });
+    return <div className={classes.numberKeypad}>{buttons}</div>;
   }
 }
 
