@@ -6,7 +6,9 @@ const KeypadButton = (props) => {
   return (
     <div className={classes.keypadButton} onClick={props.clicked}>
       {props.children}
-      <div className={classes.symbol}>{String.fromCharCode(+props.symbol)}</div>
+      <div className={classes.keypadButton__Symbol}>
+        {String.fromCharCode(+props.symbol)}
+      </div>
     </div>
   );
 };

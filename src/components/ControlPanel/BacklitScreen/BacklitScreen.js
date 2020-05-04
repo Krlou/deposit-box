@@ -15,11 +15,13 @@ class BacklitScreen extends Component {
         className={
           this.props.screenIsOff
             ? classes.backlitScreen
-            : [classes.backlitScreen, classes.off].join(" ")
+            : [classes.backlitScreen, classes.backlitScreenOff].join(" ")
         }
       >
-        <div className={classes.lockStatus}>{this.props.lockStatus}</div>
-        <div className={classes.statusMessage}>{show}</div>
+        <div className={classes.backlitScreen__LockStatus}>
+          {this.props.lockStatus}
+        </div>
+        <div className={classes.backlitScreen__StatusMessage}>{show}</div>
       </div>
     );
   }

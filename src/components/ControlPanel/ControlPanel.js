@@ -10,7 +10,7 @@ const ControlPanel = () => {
     <div className={classes.controlPanel}>
       <BacklitScreen />
       <NumberKeypad />
-      <div className={classes.serial}>S/N: 4815162342</div>
+      <div className={classes.controlPanel__Serial}>S/N: 4815162342</div>
     </div>
   );
 };

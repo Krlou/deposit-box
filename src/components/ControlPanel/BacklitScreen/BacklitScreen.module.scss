@@ -10,11 +10,11 @@
   overflow: hidden;
 }
 
-.off {
+.backlitScreenOff {
   background-color: #7fffff;
 }
 
-.lockStatus {
+.backlitScreen__LockStatus {
   margin: 8px;
   font: {
     size: 16px;
@@ -23,7 +23,7 @@
   user-select: none;
 }
 
-.statusMessage {
+.backlitScreen__StatusMessage {
   margin: 8px 8px;
   padding: 0 8px;
   font: {
