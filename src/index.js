@@ -8,18 +8,18 @@ import { createStore } from "redux";
 import { Provider } from "react-redux";
 import reducer from "./store/reducer";
 
-const saveToLocalStorage = (state) => {
+const saveToSessionStorage = (state) => {
   try {
     const serializedState = JSON.stringify(state);
-    localStorage.setItem("state", serializedState);
+    sessionStorage.setItem("state", serializedState);
   } catch (err) {
     console.log(err);
   }
 };
 
-const loadFromLocalStorage = () => {
+const loadFromSessionStorage = () => {
   try {
-    const serializedState = localStorage.getItem("state");
+    const serializedState = sessionStorage.getItem("state");
     if (serializedState === null) return undefined;
     return JSON.parse(serializedState);
   } catch (err) {
@@ -28,14 +28,14 @@ const loadFromLocalStorage = () => {
   }
 };
 
-const persistedState = loadFromLocalStorage();
+const persistedState = loadFromSessionStorage();
 const store = createStore(
   reducer,
   persistedState,
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
-store.subscribe(() => saveToLocalStorage(store.getState()));
+store.subscribe(() => saveToSessionStorage(store.getState()));
 
 const app = (
   <Provider store={store}>
