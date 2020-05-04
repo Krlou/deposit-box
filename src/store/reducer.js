@@ -115,7 +115,6 @@ const reducer = (state = initialState, action) => {
         passcode: "",
         lockStatus: "Unlocked",
         statusMessage: "",
-        screenIsOff: true,
         enteringPasscode: false,
         beforeError: "",
       };

@@ -85,7 +85,10 @@ class NumberKeypad extends Component {
       })
       .then((responseData) => {
         if (responseData.sn === this.props.serialNumber) {
-          this.props.onReset();
+          this.props.onUnlocking();
+          setTimeout(() => {
+            this.props.onReset();
+          }, 3000);
         } else {
           this.props.onError();
         }
